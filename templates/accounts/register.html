@@ -1,0 +1,643 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account - Multibiz Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==========================================================================
+       AUTH REGISTER PAGE PROFESSIONAL DESIGN SYSTEM
+       ========================================================================== */
+    .auth-page-section {
+        min-height: calc(100vh - 72px);
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        padding: 2.5rem 1rem;
+        position: relative;
+    }
+
+    .auth-bg-blob {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        filter: blur(100px);
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.16;
+    }
+    .auth-bg-blob-1 {
+        top: -80px;
+        right: 12%;
+        background: linear-gradient(135deg, #93c5fd, #bfdbfe);
+    }
+    .auth-bg-blob-2 {
+        bottom: -80px;
+        left: 12%;
+        background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    }
+
+    /* Auth Card Container */
+    .auth-card {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px -18px rgba(15, 23, 42, 0.28), 0 1px 2px rgba(15, 23, 42, 0.04);
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    /* Modern Segmented Role Selector */
+    .role-segmented-box {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 4px;
+        display: flex;
+        gap: 4px;
+    }
+
+    .role-segmented-btn {
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: #475569;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .role-segmented-btn .btn-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .role-segmented-btn:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.6);
+        color: #0f172a;
+    }
+
+    .role-segmented-btn.active {
+        background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.22);
+    }
+
+    /* Modern Form Controls */
+    .form-label-modern {
+        font-size: 0.83rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 0.45rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .input-group-modern {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        border-radius: 8px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-group-modern .input-group-text {
+        background-color: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-right: none;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        color: #64748b;
+        font-size: 0.95rem;
+        padding: 0.6rem 0.85rem;
+        transition: all 0.2s ease;
+    }
+
+    .input-group-modern .form-control {
+        border: 1.5px solid #e2e8f0;
+        border-left: none;
+        border-radius: 0;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        font-size: 0.9rem;
+        padding: 0.6rem 0.85rem;
+        background-color: #ffffff;
+        color: #0f172a;
+        font-weight: 500;
+        min-height: 43px;
+        transition: all 0.2s ease;
+    }
+
+    .input-group-modern.has-toggle .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+    }
+
+    .input-group-modern .btn-toggle-pwd {
+        background-color: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-left: none;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        color: #64748b;
+        padding: 0.6rem 0.85rem;
+        min-width: 44px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .input-group-modern .btn-toggle-pwd:hover {
+        color: #0f172a;
+        background-color: #f1f5f9;
+    }
+
+    .input-group-modern:focus-within .input-group-text,
+    .input-group-modern:focus-within .btn-toggle-pwd {
+        border-color: #3b82f6;
+        background-color: #eff6ff;
+        color: #2563eb;
+    }
+
+    .input-group-modern:focus-within .form-control {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14);
+        outline: none;
+    }
+
+    .input-group-modern.is-invalid .input-group-text,
+    .input-group-modern.is-invalid .form-control,
+    .input-group-modern.is-invalid .btn-toggle-pwd {
+        border-color: #ef4444 !important;
+        background-color: #fef2f2 !important;
+    }
+
+    /* Primary Submit Button */
+    .btn-submit-modern {
+        background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.7rem 1.25rem;
+        font-size: 0.98rem;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .btn-submit-modern:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 16px rgba(37, 99, 235, 0.28);
+    }
+
+    .btn-submit-modern:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+
+    /* Password Strength Meter */
+    .pwd-strength-container {
+        margin-top: 0.4rem;
+        font-size: 0.75rem;
+    }
+    .pwd-strength-bars {
+        display: flex;
+        gap: 4px;
+        height: 4px;
+        margin-bottom: 4px;
+    }
+    .pwd-strength-bar {
+        flex: 1;
+        height: 100%;
+        background: #e2e8f0;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+    .pwd-strength-text {
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .auth-page-title {
+        font-size: 1.55rem;
+        letter-spacing: -0.02em;
+    }
+
+    .auth-page-subtitle {
+        max-width: 34rem;
+        margin-inline: auto;
+        line-height: 1.5;
+    }
+
+    .auth-card .form-control:focus,
+    .auth-card button:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, 0.18);
+        outline-offset: 1px;
+    }
+
+    @media (max-width: 575.98px) {
+        .auth-page-section {
+            align-items: flex-start;
+            padding: 1.5rem 0.75rem;
+        }
+
+        .auth-card {
+            padding: 1.5rem !important;
+        }
+
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-page-section">
+    <!-- Ambient Blur Background Accents -->
+    <div class="auth-bg-blob auth-bg-blob-1"></div>
+    <div class="auth-bg-blob auth-bg-blob-2"></div>
+
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+                <div class="auth-card p-4 p-md-5">
+                    
+                    <!-- Top Brand & Header Section -->
+                    <div class="text-center mb-4">
+                        <h3 class="fw-extrabold text-dark tracking-tight mb-1" style="font-size: 1.65rem;">Create Your Account</h3>
+                    </div>
+
+                    <!-- Role Switcher Tabs (Segmented Control) -->
+                    <div class="role-segmented-box mb-3" role="tablist" id="registerRoleTabs">
+                        <button class="role-segmented-btn {% if active_tab != 'employer' %}active{% endif %}" id="btn-tab-applicant" type="button" role="tab" aria-selected="{% if active_tab != 'employer' %}true{% else %}false{% endif %}" onclick="switchAuthRole('applicant')">
+                            <span class="btn-title">
+                                <i class="fa-solid fa-user-graduate"></i> I'm a Jobseeker
+                            </span>
+                        </button>
+                        <button class="role-segmented-btn {% if active_tab == 'employer' %}active{% endif %}" id="btn-tab-employer" type="button" role="tab" aria-selected="{% if active_tab == 'employer' %}true{% else %}false{% endif %}" onclick="switchAuthRole('employer')">
+                            <span class="btn-title">
+                                <i class="fa-solid fa-building-circle-check"></i> I'm an Employer
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- TAB CONTENT CONTAINERS -->
+                    <div class="tab-content">
+                        
+                        <!-- ==========================================
+                             APPLICANT / JOBSEEKER REGISTRATION FORM
+                             ========================================== -->
+                        <div class="tab-pane fade {% if active_tab != 'employer' %}show active{% endif %}" id="applicant-form-pane" role="tabpanel">
+                            <form method="POST" action="{% url 'register' %}" id="applicantRegisterForm">
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="applicant">
+
+                                {% if applicant_form.non_field_errors %}
+                                    <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3 border-0 bg-danger bg-opacity-10 text-danger fw-semibold">
+                                        {% for err in applicant_form.non_field_errors %}
+                                            <div><i class="fa-solid fa-circle-exclamation me-1.5"></i> {{ err }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="row g-3 mb-3">
+                                    <!-- First Name -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-regular fa-user text-muted"></i> First Name
+                                        </label>
+                                        <div class="input-group-modern {% if applicant_form.first_name.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                            {{ applicant_form.first_name }}
+                                        </div>
+                                        {% if applicant_form.first_name.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ applicant_form.first_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Last Name -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-regular fa-user text-muted"></i> Last Name
+                                        </label>
+                                        <div class="input-group-modern {% if applicant_form.last_name.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                            {{ applicant_form.last_name }}
+                                        </div>
+                                        {% if applicant_form.last_name.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ applicant_form.last_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Email Address -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-regular fa-envelope text-muted"></i> Email Address
+                                        </label>
+                                        <div class="input-group-modern {% if applicant_form.email.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                            {{ applicant_form.email }}
+                                        </div>
+                                        {% if applicant_form.email.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ applicant_form.email.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-phone text-muted"></i> Contact Phone
+                                        </label>
+                                        <div class="input-group-modern">
+                                            <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                                            {{ applicant_form.phone }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-lock text-muted"></i> Password
+                                        </label>
+                                        <div class="input-group-modern has-toggle {% if applicant_form.password.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                            {{ applicant_form.password }}
+                                            <button class="btn btn-toggle-pwd" type="button" tabindex="-1" onclick="togglePasswordVisibility(this)">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        {% if applicant_form.password.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ applicant_form.password.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Confirm Password -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-shield-check text-muted"></i> Confirm Password
+                                        </label>
+                                        <div class="input-group-modern has-toggle {% if applicant_form.confirm_password.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                            {{ applicant_form.confirm_password }}
+                                            <button class="btn btn-toggle-pwd" type="button" tabindex="-1" onclick="togglePasswordVisibility(this)">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        {% if applicant_form.confirm_password.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ applicant_form.confirm_password.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Terms & Privacy note -->
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="applicantTermsCheck" required checked>
+                                    <label class="form-check-label text-muted small" for="applicantTermsCheck" style="font-size: 0.8rem;">
+                                        I agree to the <a href="{% url 'terms_conditions' %}" class="text-primary text-decoration-none fw-semibold" target="_blank" rel="noopener">Terms and Conditions</a> and <a href="{% url 'privacy_policy' %}" class="text-primary text-decoration-none fw-semibold" target="_blank" rel="noopener">Privacy Policy</a>.
+                                    </label>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn-submit-modern mb-3">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                    <span>Create Jobseeker Account</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- ==========================================
+                             EMPLOYER / RECRUITER REGISTRATION FORM
+                             ========================================== -->
+                        <div class="tab-pane fade {% if active_tab == 'employer' %}show active{% endif %}" id="employer-form-pane" role="tabpanel">
+                            <form method="POST" action="{% url 'register' %}" id="employerRegisterForm">
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="employer">
+
+                                {% if employer_form.non_field_errors %}
+                                    <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3 border-0 bg-danger bg-opacity-10 text-danger fw-semibold">
+                                        {% for err in employer_form.non_field_errors %}
+                                            <div><i class="fa-solid fa-circle-exclamation me-1.5"></i> {{ err }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="row g-3 mb-3">
+                                    <!-- Company Name -->
+                                    <div class="col-12">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-building text-muted"></i> Company / Organization Name
+                                        </label>
+                                        <div class="input-group-modern {% if employer_form.company_name.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-building"></i></span>
+                                            {{ employer_form.company_name }}
+                                        </div>
+                                        {% if employer_form.company_name.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ employer_form.company_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Contact First Name -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-regular fa-user text-muted"></i> Contact First Name
+                                        </label>
+                                        <div class="input-group-modern {% if employer_form.first_name.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                            {{ employer_form.first_name }}
+                                        </div>
+                                        {% if employer_form.first_name.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ employer_form.first_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Contact Last Name -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-regular fa-user text-muted"></i> Contact Last Name
+                                        </label>
+                                        <div class="input-group-modern {% if employer_form.last_name.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                            {{ employer_form.last_name }}
+                                        </div>
+                                        {% if employer_form.last_name.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ employer_form.last_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Business Email -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-regular fa-envelope text-muted"></i> Business Email Address
+                                        </label>
+                                        <div class="input-group-modern {% if employer_form.email.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                            {{ employer_form.email }}
+                                        </div>
+                                        {% if employer_form.email.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ employer_form.email.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Contact Phone -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-phone text-muted"></i> Contact Phone Number
+                                        </label>
+                                        <div class="input-group-modern">
+                                            <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                                            {{ employer_form.phone }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-lock text-muted"></i> Password
+                                        </label>
+                                        <div class="input-group-modern has-toggle {% if employer_form.password.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                            {{ employer_form.password }}
+                                            <button class="btn btn-toggle-pwd" type="button" tabindex="-1" onclick="togglePasswordVisibility(this)">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        {% if employer_form.password.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ employer_form.password.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Confirm Password -->
+                                    <div class="col-sm-6">
+                                        <label class="form-label-modern">
+                                            <i class="fa-solid fa-shield-check text-muted"></i> Confirm Password
+                                        </label>
+                                        <div class="input-group-modern has-toggle {% if employer_form.confirm_password.errors %}is-invalid{% endif %}">
+                                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                            {{ employer_form.confirm_password }}
+                                            <button class="btn btn-toggle-pwd" type="button" tabindex="-1" onclick="togglePasswordVisibility(this)">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        {% if employer_form.confirm_password.errors %}
+                                            <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ employer_form.confirm_password.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Terms & Privacy note -->
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="employerTermsCheck" required checked>
+                                    <label class="form-check-label text-muted small" for="employerTermsCheck" style="font-size: 0.8rem;">
+                                        I certify that I represent this organization and agree to the <a href="{% url 'terms_conditions' %}" class="text-primary text-decoration-none fw-semibold" target="_blank" rel="noopener">Terms and Conditions</a>.
+                                    </label>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn-submit-modern mb-3">
+                                    <i class="fa-solid fa-building-circle-check"></i>
+                                    <span>Create Employer Account</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sign In Footer Link -->
+                    <div class="text-center text-muted small mt-2 mb-3">
+                        Already have an account? 
+                        <a href="{% url 'login' %}" class="fw-bold text-primary text-decoration-none ms-1">
+                            Sign In to Portal <i class="fa-solid fa-arrow-right-long ms-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    /**
+     * Smooth Tab Switcher between Jobseeker and Employer
+     */
+    function switchAuthRole(role) {
+        const applicantBtn = document.getElementById('btn-tab-applicant');
+        const employerBtn = document.getElementById('btn-tab-employer');
+        const applicantPane = document.getElementById('applicant-form-pane');
+        const employerPane = document.getElementById('employer-form-pane');
+
+        if (role === 'applicant') {
+            applicantBtn.classList.add('active');
+            applicantBtn.setAttribute('aria-selected', 'true');
+            employerBtn.classList.remove('active');
+            employerBtn.setAttribute('aria-selected', 'false');
+
+            applicantPane.classList.add('show', 'active');
+            employerPane.classList.remove('show', 'active');
+
+            // Update URL query state smoothly without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('tab', 'applicant');
+            window.history.replaceState({}, '', url);
+        } else {
+            employerBtn.classList.add('active');
+            employerBtn.setAttribute('aria-selected', 'true');
+            applicantBtn.classList.remove('active');
+            applicantBtn.setAttribute('aria-selected', 'false');
+
+            employerPane.classList.add('show', 'active');
+            applicantPane.classList.remove('show', 'active');
+
+            // Update URL query state smoothly without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('tab', 'employer');
+            window.history.replaceState({}, '', url);
+        }
+    }
+
+    /**
+     * Password Visibility Toggle
+     */
+    function togglePasswordVisibility(button) {
+        const inputGroup = button.closest('.input-group-modern');
+        const input = inputGroup.querySelector('input');
+        const icon = button.querySelector('i');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+{% endblock %}

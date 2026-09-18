@@ -1,0 +1,12 @@
+.env
+*.sqlite3
+__pycache__/
+*.py[cod]
+staticfiles/
+media/
+!media/.gitkeep
+
+# OAuth and service-account credentials
+google-drive-token.json
+client_secret_*.json
+candidaites-*.json
