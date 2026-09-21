@@ -5,73 +5,196 @@
 
 {% block extra_css %}
 <style>
+    /* ==========================================================================
+       CAREERS & JOB BOARD MODERN DESIGN SYSTEM
+       ========================================================================== */
+    .careers-hero-section {
+        background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e3a8a 100%);
+        padding: 3rem 0 2.5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .careers-hero-section::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -60px;
+        width: 380px;
+        height: 380px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .careers-hero-section::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: 8%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(14, 165, 233, 0.22) 0%, rgba(14, 165, 233, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .careers-search-card {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.95);
+        border-radius: 18px;
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
+        padding: 1.1rem;
+    }
+
     .job-list-scroll {
-        max-height: calc(100vh - 120px);
+        max-height: calc(100vh - 130px);
         overflow-y: auto;
         padding-right: 6px;
     }
+
+    .job-list-scroll::-webkit-scrollbar {
+        width: 5px;
+    }
+    .job-list-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .job-list-scroll::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
     .job-item-card {
         cursor: pointer;
-        border: 1.5px solid var(--mb-border);
-        border-radius: var(--mb-radius-lg);
-        background: #ffffff;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 16px !important;
+        background: #ffffff !important;
         padding: 1.25rem;
-        transition: all var(--mb-transition-fast);
+        transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
     }
+
     .job-item-card:hover {
-        border-color: #93c5fd;
-        background: #f8fafc;
+        border-color: #3b82f6 !important;
         transform: translateY(-2px);
-        box-shadow: var(--mb-shadow-sm);
+        box-shadow: 0 12px 26px rgba(37, 99, 235, 0.12) !important;
     }
+
     .job-item-card.active {
-        border-color: var(--mb-primary);
-        background: #eff6ff;
-        box-shadow: 0 0 0 1px var(--mb-primary), var(--mb-shadow-sm);
+        border-color: #2563eb !important;
+        background: #f0f7ff !important;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.16) !important;
     }
+
     .job-item-card.active::before {
         content: "";
         position: absolute;
         left: 0;
-        top: 12px;
-        bottom: 12px;
-        width: 4px;
-        background: var(--mb-primary);
+        top: 14px;
+        bottom: 14px;
+        width: 4.5px;
+        background: #2563eb;
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
     }
+
     .job-detail-sticky-pane {
         position: sticky;
-        top: 85px;
-        max-height: calc(100vh - 105px);
+        top: 70px;
+        max-height: calc(100vh - 90px);
         overflow-y: auto;
-        background: #ffffff;
-        border: 1.5px solid var(--mb-border);
-        border-radius: var(--mb-radius-xl);
-        box-shadow: var(--mb-shadow-md);
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    .job-detail-sticky-pane::-webkit-scrollbar {
+        width: 5px;
+    }
+    .job-detail-sticky-pane::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .job-detail-sticky-pane::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .spec-card-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        transition: all 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .spec-card-box:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .company-avatar-box {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+    }
+
+    .skill-chip {
+        display: inline-flex;
+        align-items: center;
+        background: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+        border-radius: 9999px;
+        padding: 0.3rem 0.75rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.3;
+        transition: all 0.2s ease;
+    }
+
+    .skill-chip:hover {
+        background: #dbeafe;
+        border-color: #93c5fd;
+        transform: translateY(-1px);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Search Header Hero with Mesh Gradient -->
-<section class="hero-mesh-bg text-white py-4">
+<section class="careers-hero-section text-white">
     <div class="container position-relative" style="z-index: 2;">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <span class="badge bg-primary bg-opacity-25 text-info px-3 py-1 rounded-pill fw-semibold mb-1 border border-info border-opacity-25">
+                <span class="badge bg-primary bg-opacity-25 text-info px-3 py-1.5 rounded-pill fw-semibold mb-2 border border-info border-opacity-25 shadow-sm">
                     <i class="fa-solid fa-briefcase text-warning me-1"></i> Live Career Directory
                 </span>
-                <h3 class="fw-extrabold text-white mb-0">Explore High-Impact Positions</h3>
+                <h2 class="fw-extrabold text-white mb-0" style="letter-spacing: -0.5px;">Explore High-Impact Positions</h2>
             </div>
             <div class="text-light text-opacity-75 small">
-                Showing <strong class="text-white">{{ total_count }}</strong> verified opportunities
+                Showing <strong class="text-white fs-6">{{ total_count }}</strong> verified opportunities
             </div>
         </div>
 
         <!-- Filter Search Bar -->
-        <div class="bg-white p-2 p-md-3 rounded-4 shadow-md text-dark border">
+        <div class="careers-search-card text-dark">
             <form method="GET" action="{% url 'careers' %}">
                 <div class="row g-2 align-items-center">
                     <div class="col-lg-4 col-md-6">
@@ -97,7 +220,7 @@
                     </div>
                     <div class="col-lg-2 col-md-6">
                         <button type="submit" class="btn btn-primary-custom w-100 py-2 shadow-sm">
-                            <i class="fa-solid fa-filter"></i> Search
+                            <i class="fa-solid fa-filter me-1"></i> Search
                         </button>
                     </div>
                 </div>
@@ -109,7 +232,7 @@
 <!-- =========================================================================
      MASTER-DETAIL SPLIT LAYOUT (LEFT: JOB LIST, RIGHT: JOB DETAILS)
      ========================================================================= -->
-<section class="py-4" style="background-color: #f8fafc;">
+<section class="py-4" style="background-color: var(--surface-bg);">
     <div class="container">
         <div class="row g-4">
             
@@ -136,31 +259,42 @@
                              data-job-id="{{ job.id }}">
                             
                             <!-- Header: Avatar & Badges -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="company-avatar-box">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <div class="d-flex align-items-center gap-2.5 min-w-0">
+                                    <div class="company-avatar-box flex-shrink-0">
                                         {{ job.company_name|slice:":1"|upper }}
                                     </div>
-                                    <div>
-                                        <div class="fw-bold text-dark text-truncate" style="max-width: 170px;">{{ job.company_name }}</div>
-                                        <div class="text-muted small"><i class="fa-solid fa-location-dot me-1 text-danger"></i>{{ job.location }}</div>
+                                    <div class="min-w-0">
+                                        <div class="fw-bold text-dark text-truncate" style="max-width: 170px; font-size: 0.92rem;">{{ job.company_name }}</div>
+                                        <div class="text-muted small text-truncate" style="font-size: 0.78rem;">
+                                            <i class="fa-solid fa-location-dot me-1 text-danger"></i>{{ job.location|truncatechars:22 }}
+                                        </div>
                                     </div>
                                 </div>
-                                <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill small">
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-2.5 py-1 rounded-pill small flex-shrink-0" style="font-size: 0.75rem;">
                                     {{ job.get_employment_type_display }}
                                 </span>
                             </div>
 
                             <!-- Title -->
-                            <h6 class="fw-bold text-dark mb-1">{{ job.title }}</h6>
-                            <p class="text-muted small mb-2 text-truncate-2" style="font-size: 0.84rem; line-height: 1.5;">
+                            <h6 class="fw-bold text-dark mb-1.5 mt-2" style="font-size: 1.02rem; line-height: 1.35;">{{ job.title }}</h6>
+                            <p class="text-muted small mb-2.5 text-truncate-2" style="font-size: 0.82rem; line-height: 1.55;">
                                 {{ job.description|truncatewords:15 }}
                             </p>
 
+                            <!-- Mini Skills Tags -->
+                            {% if job.skills_required %}
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    {% for s in job.get_skills_list|slice:":3" %}
+                                        <span class="skill-chip py-0 px-2" style="font-size: 0.7rem;">{{ s }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
                             <!-- Compensation & Skills -->
                             <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                <span class="fw-bold text-success small">{{ job.salary_range|default:"Negotiable" }}</span>
-                                <span class="text-muted small" style="font-size: 0.75rem;">
+                                <span class="fw-bold text-success small" style="font-size: 0.86rem;">{{ job.salary_range|default:"Negotiable" }}</span>
+                                <span class="text-muted small" style="font-size: 0.74rem;">
                                     <i class="fa-regular fa-clock me-1"></i>{{ job.posted_at|timesince }} ago
                                 </span>
                             </div>
@@ -202,14 +336,14 @@
                         <!-- Header Dossier -->
                         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start border-bottom pb-4 mb-4 gap-3">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="company-avatar-box fs-3" id="paneCompanyAvatar" style="width: 60px; height: 60px;">
+                                <div class="company-avatar-box fs-3" id="paneCompanyAvatar" style="width: 58px; height: 58px; font-size: 1.5rem;">
                                     {{ jobs.first.company_name|slice:":1"|upper }}
                                 </div>
                                 <div>
                                     <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill small mb-1" id="paneType">
                                         {{ jobs.first.get_employment_type_display }}
                                     </span>
-                                    <h3 class="fw-extrabold text-dark mb-1" id="paneTitle">{{ jobs.first.title }}</h3>
+                                    <h3 class="fw-extrabold text-dark mb-1" id="paneTitle" style="letter-spacing: -0.3px;">{{ jobs.first.title }}</h3>
                                     <div class="text-secondary small fw-semibold" id="paneCompanyMeta">
                                         <i class="fa-solid fa-building me-1 text-primary"></i> <span id="paneCompany">{{ jobs.first.company_name }}</span> &bull; 
                                         <i class="fa-solid fa-location-dot text-danger ms-1 me-1"></i> <span id="paneLocation">{{ jobs.first.location }}</span>
@@ -217,7 +351,7 @@
                                 </div>
                             </div>
                             
-                            <div class="text-sm-end">
+                            <div class="text-sm-end flex-shrink-0">
                                 <a href="{% url 'apply_job' jobs.first.pk %}" id="paneTopApplyBtn" class="btn btn-primary-custom px-4 py-2 shadow-sm">
                                     <i class="fa-solid fa-paper-plane me-1"></i> Apply Now
                                 </a>
@@ -227,20 +361,26 @@
                         <!-- Key Specs Pills Grid -->
                         <div class="row g-3 mb-4">
                             <div class="col-sm-4">
-                                <div class="p-3 bg-light rounded-3 border">
-                                    <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Compensation</div>
+                                <div class="spec-card-box">
+                                    <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.04em;">
+                                        <i class="fa-solid fa-wallet text-success me-1"></i> Compensation
+                                    </div>
                                     <div class="fw-bold text-success fs-6 mt-1" id="paneSalary">{{ jobs.first.salary_range|default:"Negotiable" }}</div>
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <div class="p-3 bg-light rounded-3 border">
-                                    <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Work Arrangement</div>
+                                <div class="spec-card-box">
+                                    <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.04em;">
+                                        <i class="fa-solid fa-briefcase text-primary me-1"></i> Work Arrangement
+                                    </div>
                                     <div class="fw-bold text-dark fs-6 mt-1" id="paneWorkType">{{ jobs.first.get_employment_type_display }}</div>
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <div class="p-3 bg-light rounded-3 border">
-                                    <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Date Posted</div>
+                                <div class="spec-card-box">
+                                    <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.04em;">
+                                        <i class="fa-regular fa-calendar-check text-info me-1"></i> Date Posted
+                                    </div>
                                     <div class="fw-bold text-dark fs-6 mt-1" id="panePostedAt">{{ jobs.first.posted_at|timesince }} ago</div>
                                 </div>
                             </div>
@@ -248,10 +388,10 @@
 
                         <!-- Required Skills Cloud -->
                         <div class="mb-4 pb-3 border-bottom">
-                            <h6 class="fw-bold text-dark mb-2">
+                            <h6 class="fw-bold text-dark mb-2.5">
                                 <i class="fa-solid fa-tags text-primary me-2"></i>Required Skills & Tech Stack
                             </h6>
-                            <div class="d-flex flex-wrap gap-1" id="paneSkillsContainer">
+                            <div class="d-flex flex-wrap gap-1.5" id="paneSkillsContainer">
                                 {% for s in jobs.first.get_skills_list %}
                                     <span class="skill-chip"><i class="fa-solid fa-check text-success me-1"></i>{{ s }}</span>
                                 {% empty %}
@@ -281,12 +421,12 @@
                         </div>
 
                         <!-- Bottom Apply Banner -->
-                        <div class="p-4 bg-light rounded-4 border d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-4">
+                        <div class="p-4 rounded-4 border d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-4" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border-color: #a7f3d0 !important;">
                             <div>
-                                <h6 class="fw-bold text-dark mb-0">Interested in this role?</h6>
-                                <p class="text-muted small mb-0">Submit your application today via our fast-track platform.</p>
+                                <h6 class="fw-bold text-dark mb-1">Ready to apply for this role?</h6>
+                                <p class="text-muted small mb-0">Submit your application today via our fast-track automated platform.</p>
                             </div>
-                            <a href="{% url 'apply_job' jobs.first.pk %}" id="paneBottomApplyBtn" class="btn btn-primary-custom px-5 py-2 shadow">
+                            <a href="{% url 'apply_job' jobs.first.pk %}" id="paneBottomApplyBtn" class="btn btn-primary-custom px-5 py-2.5 shadow flex-shrink-0">
                                 <i class="fa-solid fa-paper-plane me-2"></i> Apply Now
                             </a>
                         </div>

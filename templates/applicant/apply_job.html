@@ -8,6 +8,108 @@
     .apply-page-wrapper {
         min-height: calc(100vh - 140px);
     }
+    .stepper-container {
+        margin-bottom: 1rem;
+    }
+    .stepper-track {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        position: relative;
+        padding: 0.25rem 0;
+    }
+    .stepper-track::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 15px;
+        height: 1px;
+        background: #dfe7ef;
+        z-index: 0;
+    }
+    .stepper-step {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        text-align: center;
+        color: #64748b;
+        min-width: 0;
+    }
+    .stepper-step.active {
+        color: #0f172a;
+    }
+    .stepper-step.active .stepper-dot {
+        background: #0b5bd3;
+        border-color: #0b5bd3;
+        box-shadow: 0 0 0 3px rgba(11, 91, 211, 0.12);
+    }
+    .stepper-dot {
+        display: block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #dfe7ef;
+        margin: 0 auto 0.65rem;
+        transition: all 0.2s ease;
+    }
+    .stepper-label {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        display: block;
+        max-width: 120px;
+        margin: 0 auto;
+        font-weight: 500;
+    }
+    .application-panel {
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        border-radius: 1rem;
+        padding: 1.5rem;
+    }
+    .wizard-step-panel {
+        display: none;
+        animation: fadeInWizard 0.2s ease;
+    }
+    .wizard-step-panel.active {
+        display: block;
+    }
+    @keyframes fadeInWizard {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .wizard-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+    .wizard-btn {
+        border-radius: 10px;
+        padding: 0.72rem 1.1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .wizard-btn.secondary {
+        background: #fff;
+        border: 1px solid #dfe7ef;
+        color: #334155;
+    }
+    .wizard-btn.primary {
+        background: #0b5bd3;
+        border: 1px solid #0b5bd3;
+        color: #fff;
+    }
+    .wizard-question-box {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.9rem;
+        padding: 1rem 1rem 0.75rem;
+    }
     .resume-choice-card {
         border: 1.5px solid var(--mb-border);
         border-radius: var(--mb-radius-md);
@@ -63,6 +165,27 @@
         border-radius: var(--mb-radius-sm);
         padding: 0.5rem 0.75rem;
         font-size: 0.8rem;
+    }
+
+    /* Application Studio is a single continuous form. */
+    .apply-page-wrapper .stepper-container {
+        display: none;
+    }
+
+    .apply-page-wrapper .wizard-step-panel,
+    .apply-page-wrapper .wizard-step-panel.active {
+        display: block;
+        animation: none;
+        margin-bottom: 1.5rem;
+    }
+
+    .apply-page-wrapper .next-step-btn,
+    .apply-page-wrapper .prev-step-btn {
+        display: none;
+    }
+
+    .apply-page-wrapper .wizard-actions {
+        justify-content: flex-end;
     }
 </style>
 {% endblock %}
@@ -121,6 +244,21 @@
             <div class="col-lg-7">
                 <div class="custom-card p-3 p-lg-4 bg-white border-0 shadow-sm rounded-4 h-100 d-flex flex-column justify-content-between">
                     <div>
+
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="company-avatar-box fs-5 shadow-xs" style="width: 38px; height: 38px;">
+                                        {{ job.company_name|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark small text-uppercase text-muted">{{ job.company_name }}</div>
+                                    </div>
+                                </div>
+                                <a href="{% url 'job_detail_public' job.pk %}" class="btn btn-link text-decoration-none p-0 small fw-semibold">View job description</a>
+                            </div>
+
+                        </div>
                         
                         <!-- Step 1: Resume & Credentials Selection -->
                         <div class="mb-3">
@@ -220,7 +358,7 @@
                                     <i class="fa-solid fa-brain"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold text-dark mb-0">AI Quality & Fit Review</h6>
+                                    <h6 class="fw-bold text-dark mb-0">AI Quality Fit Review</h6>
                                 </div>
                             </div>
                             <div>
@@ -541,6 +679,43 @@ document.addEventListener('DOMContentLoaded', function() {
     if (useProfileRadio) {
         useProfileRadio.addEventListener('change', runAiCheck);
     }
+
+    const stepPanels = document.querySelectorAll('.wizard-step-panel');
+    const stepItems = document.querySelectorAll('.stepper-step');
+    const nextButtons = document.querySelectorAll('.next-step-btn');
+    const prevButtons = document.querySelectorAll('.prev-step-btn');
+    let currentStep = 1;
+
+    function renderWizardStep(step) {
+        stepPanels.forEach(panel => {
+            panel.classList.toggle('active', Number(panel.dataset.stepPanel) === step);
+        });
+
+        stepItems.forEach((item, index) => {
+            const isActive = index + 1 === step;
+            item.classList.toggle('active', isActive);
+        });
+    }
+
+    nextButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (currentStep < 4) {
+                currentStep += 1;
+                renderWizardStep(currentStep);
+            }
+        });
+    });
+
+    prevButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (currentStep > 1) {
+                currentStep -= 1;
+                renderWizardStep(currentStep);
+            }
+        });
+    });
+
+    renderWizardStep(currentStep);
 
     // Initial check on load
     setTimeout(runAiCheck, 300);

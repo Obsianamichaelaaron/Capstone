@@ -184,6 +184,31 @@ class CompleteRecruitmentFlowTests(TestCase):
         self.assertEqual(application.status, 'selected')
         self.assertIsNotNone(application.employer_decision_at)
 
+    def test_applicant_application_wizard_has_stepper_and_personal_details(self):
+        """The applicant application page should expose a step-by-step wizard matching the expected UX."""
+        job = JobPosting.objects.create(
+            employer=self.employer_profile,
+            title='Operations Analyst',
+            skills_required='Excel, SQL, Reporting',
+            min_experience_years=1,
+            status='active',
+            created_by_admin=True
+        )
+
+        self.client.force_login(self.qualified_user)
+        response = self.client.get(reverse('apply_job', args=[job.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Choose documents')
+        self.assertContains(response, 'Answer employee questions')
+        self.assertContains(response, 'Update Jobstreet Profile')
+        self.assertContains(response, 'Review and submit')
+        self.assertContains(response, 'Personal details')
+        self.assertContains(response, 'First name')
+        self.assertContains(response, 'Last name')
+        self.assertContains(response, 'Home location')
+        self.assertContains(response, 'Phone number')
+
     def test_scenario_2_unqualified_applicant_flow(self):
         """
         Scenario 2: Unqualified Applicant Flow:

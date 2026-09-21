@@ -17,14 +17,14 @@
   --mb-accent-emerald: #10b981;
   --mb-accent-rose: #f43f5e;
 
-  /* Neutral Spectrum (Softened to eliminate bright glare) */
-  --mb-bg-main: #f1f5f9;
+  /* Neutral Spectrum (Darkened off-white/subtle slate gray background to highlight white cards) */
+  --mb-bg-main: #dbe2ea;
   --mb-bg-surface: #ffffff;
   --mb-bg-elevated: #ffffff;
   --mb-text-primary: #0f172a;
   --mb-text-secondary: #334155;
   --mb-text-muted: #64748b;
-  --mb-border: #e2e8f0;
+  --mb-border: #cbd5e1;
   --mb-border-focus: #93c5fd;
 
   /* Typography */
@@ -69,7 +69,7 @@ html, body {
 body {
   font-family: var(--mb-font-sans);
   color: var(--mb-text-primary);
-  background-color: var(--mb-bg-main);
+  background-color: var(--mb-bg-main) !important;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -112,59 +112,99 @@ a:hover {
    ========================================================================== */
 
 .navbar-custom {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  padding: 0.35rem 0;
-  transition: all var(--mb-transition-normal);
+  padding: 0.2rem 0;
+  min-height: 44px;
+  transition: all var(--mb-transition-fast);
+}
+
+body {
+  padding-top: 0 !important;
+  scroll-padding-top: 0 !important;
+}
+
+main.main-content {
+  padding-top: 0 !important;
+}
+
+.navbar-custom .container {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-custom .navbar-collapse {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.navbar-custom .navbar-nav {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.navbar-custom .navbar-nav.me-auto {
+  margin-right: 0 !important;
 }
 
 .navbar-custom.scrolled {
   background: rgba(255, 255, 255, 0.98);
   box-shadow: var(--mb-shadow-sm);
-  padding: 0.25rem 0;
+  padding: 0.15rem 0;
 }
 
 .navbar-brand-text {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.3px;
   background: var(--mb-primary-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.navbar-brand-logo {
-  height: 30px;
-  max-height: 30px;
+.navbar-brand-logo,
+.navbar-brand img {
+  height: 22px;
+  max-height: 22px;
   width: auto;
   object-fit: contain;
 }
 
 .navbar-notifications-menu { width: 300px; }
-.navbar-profile-menu { min-width: 230px; }
-.navbar-profile-button { height: 34px; }
-.navbar-profile-name { max-width: 120px; font-size: 0.83rem; }
+.navbar-profile-menu { min-width: 220px; }
+.navbar-profile-button { 
+  height: 30px; 
+  padding: 0.15rem 0.65rem; 
+  font-size: 0.78rem; 
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+.navbar-profile-name { max-width: 110px; font-size: 0.78rem; font-weight: 600; }
 .footer-mission { line-height: 1.7; }
 
 .navbar-custom .nav-link {
   font-weight: 600;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   color: var(--mb-text-secondary);
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--mb-radius-sm);
+  padding: 0.22rem 0.65rem !important;
+  border-radius: 9999px;
+  line-height: 1.25;
   transition: all var(--mb-transition-fast);
 }
 
 .navbar-custom .nav-link:hover {
   color: var(--mb-primary);
-  background-color: rgba(37, 99, 235, 0.06);
+  background-color: rgba(37, 99, 235, 0.08);
 }
 
 .navbar-custom .nav-link.active {
   color: var(--mb-primary);
-  background-color: rgba(37, 99, 235, 0.09);
+  background-color: rgba(37, 99, 235, 0.10);
+  font-weight: 600;
 }
 
 .navbar-employer .container {
@@ -175,90 +215,92 @@ a:hover {
   min-width: 0;
 }
 
-.navbar-employer .employer-nav-links {
+.navbar-employer .employer-nav-links,
+.navbar-admin .admin-nav-links {
   flex-wrap: nowrap;
   white-space: nowrap;
+  gap: 0.15rem;
 }
 
-.navbar-employer .employer-nav-links .nav-link {
-  padding-inline: 0.55rem;
-  font-size: 0.78rem;
+.navbar-employer .employer-nav-links .nav-link,
+.navbar-admin .admin-nav-links .nav-link {
+  padding: 0.22rem 0.65rem !important;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+  border-radius: 9999px;
 }
 
-.navbar-employer .employer-nav-links .nav-link i {
-  width: 1rem;
-  color: var(--mb-text-muted);
+.navbar-employer .employer-nav-links .nav-link i,
+.navbar-admin .admin-nav-links .nav-link i {
   font-size: 0.78rem;
-  text-align: center;
+  margin-right: 0.3rem;
+  opacity: 0.85;
 }
 
 .navbar-employer .employer-nav-links .nav-link.active i,
-.navbar-employer .employer-nav-links .nav-link:hover i {
+.navbar-employer .employer-nav-links .nav-link:hover i,
+.navbar-admin .admin-nav-links .nav-link.active i,
+.navbar-admin .admin-nav-links .nav-link:hover i {
   color: currentColor;
+  opacity: 1;
 }
 
-.navbar-employer .employer-nav-actions {
+.navbar-employer .employer-nav-actions,
+.navbar-admin .admin-nav-actions {
   flex-shrink: 0;
 }
 
-.navbar-admin .admin-nav-links {
-  gap: 0;
-  flex-wrap: nowrap;
-  white-space: nowrap;
+.ui-avatar-sm {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  font-size: 0.85rem !important;
 }
 
-.navbar-admin .admin-nav-links .nav-link {
-  padding-inline: 0.45rem;
-  font-size: 0.78rem;
-  white-space: nowrap;
-}
-
-.navbar-admin .navbar-nav {
-  min-width: 0;
+.ui-action-button {
+  height: 30px !important;
+  padding: 0.18rem 0.85rem !important;
+  font-size: 0.78rem !important;
+  border-radius: 9999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 @media (max-width: 1200px) and (min-width: 992px) {
-  .navbar-admin .admin-nav-links .nav-link {
-    padding-inline: 0.3rem;
-    font-size: 0.72rem;
-  }
-}
-
-@media (max-width: 1199.98px) and (min-width: 992px) {
-  .navbar-employer .employer-nav-links {
-    gap: 0 !important;
-  }
-
+  .navbar-admin .admin-nav-links .nav-link,
   .navbar-employer .employer-nav-links .nav-link {
-    padding-inline: 0.35rem;
-    font-size: 0.74rem;
-  }
-
-  .navbar-employer .navbar-brand {
-    margin-right: 0.5rem !important;
+    padding-inline: 0.45rem !important;
+    font-size: 0.78rem;
   }
 }
 
 @media (max-width: 991.98px) {
-  .navbar-employer .navbar-collapse {
-    margin-top: 0.65rem;
-    padding-top: 0.65rem;
+  .navbar-employer .navbar-collapse,
+  .navbar-admin .navbar-collapse {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--mb-border);
   }
 
-  .navbar-employer .employer-nav-links {
+  .navbar-employer .employer-nav-links,
+  .navbar-admin .admin-nav-links {
     align-items: stretch !important;
-    gap: 0.15rem !important;
+    gap: 0.25rem !important;
     white-space: normal;
   }
 
-  .navbar-employer .employer-nav-links .nav-link {
-    padding: 0.6rem 0.75rem !important;
+  .navbar-employer .employer-nav-links .nav-link,
+  .navbar-admin .admin-nav-links .nav-link {
+    padding: 0.6rem 0.85rem !important;
   }
 
-  .navbar-employer .employer-nav-actions {
+  .navbar-employer .employer-nav-actions,
+  .navbar-admin .admin-nav-actions {
     justify-content: flex-end;
-    padding-top: 0.65rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--mb-border);
   }
 }
@@ -543,18 +585,47 @@ select.form-select {
    CARDS & SURFACES
    ========================================================================== */
 
-.custom-card {
-  background: var(--mb-bg-surface);
-  border: 1px solid var(--mb-border);
+.custom-card, 
+.card, 
+.metric-card-pro, 
+.job-card-pro, 
+.pillar-card-modern, 
+.content-card, 
+.dashboard-card,
+.analytics-chart-card,
+.employer-requests-card,
+.radar-control-card,
+.radar-candidate-card,
+.job-item-card,
+.job-detail-sticky-pane,
+.audit-stat-card,
+.cms-stat-card,
+.application-panel,
+.chat-layout,
+.auth-card,
+.overview-card,
+.stat-card {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border: 1px solid var(--mb-border) !important;
   border-radius: var(--mb-radius-lg);
-  box-shadow: var(--mb-shadow-xs);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
   transition: transform var(--mb-transition-smooth), box-shadow var(--mb-transition-smooth), border-color var(--mb-transition-fast);
   overflow: hidden;
 }
 
-.custom-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: var(--mb-shadow-md);
+.custom-card:hover, 
+.card:hover, 
+.metric-card-pro:hover, 
+.job-card-pro:hover,
+.employer-requests-card:hover,
+.radar-candidate-card:hover,
+.job-item-card:hover,
+.audit-stat-card:hover,
+.cms-stat-card:hover {
+  border-color: #94a3b8 !important;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12) !important;
+  transform: translateY(-2px);
 }
 
 .custom-card-interactive:hover {
@@ -634,13 +705,17 @@ select.form-select {
 
 /* Application Status Badges */
 .badge-status {
-  font-weight: 600;
-  padding: 0.35rem 0.8rem;
+  font-weight: 700;
+  padding: 0.32rem 0.75rem;
   border-radius: var(--mb-radius-pill);
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
+  justify-content: center;
+  gap: 0.42rem;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  vertical-align: middle;
   text-transform: capitalize;
 }
 
@@ -1208,6 +1283,14 @@ select.form-select {
               linear-gradient(135deg, #090e17 0%, #0f172a 50%, #1e293b 100%);
   position: relative;
   overflow: hidden;
+  padding-top: 2.2rem !important;
+  padding-bottom: 1.75rem !important;
+  margin-top: 0 !important;
+}
+
+.hero-mesh-bg .container {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0 !important;
 }
 
 .hero-floating-box {
@@ -1587,6 +1670,189 @@ select.form-select {
   background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0) 70%);
   border-radius: 50%;
   pointer-events: none;
+}
+
+/* Employer portal surfaces */
+.employer-portal-page,
+.applicant-portal-page,
+.admin-portal-page {
+  background: linear-gradient(180deg, #f5f7fb 0%, #eef4ff 100%);
+  color: var(--mb-text-primary);
+}
+
+.applicant-portal-page {
+  background: linear-gradient(180deg, #f6fbff 0%, #eef5ff 100%);
+}
+
+.admin-portal-page {
+  background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+}
+
+.employer-portal-page .container,
+.applicant-portal-page .container,
+.admin-portal-page .container {
+  max-width: 1440px;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.employer-portal-page .custom-card,
+.applicant-portal-page .custom-card,
+.admin-portal-page .custom-card,
+.employer-portal-page .card,
+.applicant-portal-page .card,
+.admin-portal-page .card {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+  margin-bottom: 1.25rem;
+}
+
+.employer-portal-page .custom-card:hover,
+.applicant-portal-page .custom-card:hover,
+.admin-portal-page .custom-card:hover,
+.employer-portal-page .card:hover,
+.applicant-portal-page .card:hover,
+.admin-portal-page .card:hover {
+  border-color: #94a3b8 !important;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.10) !important;
+  transform: translateY(-2px);
+}
+
+.employer-portal-page .form-control,
+.employer-portal-page .form-select,
+.employer-portal-page .input-group-text,
+.employer-portal-page textarea,
+.employer-portal-page select,
+.applicant-portal-page .form-control,
+.applicant-portal-page .form-select,
+.applicant-portal-page .input-group-text,
+.applicant-portal-page textarea,
+.applicant-portal-page select,
+.admin-portal-page .form-control,
+.admin-portal-page .form-select,
+.admin-portal-page .input-group-text,
+.admin-portal-page textarea,
+.admin-portal-page select {
+  background: #f8fafc;
+  border: 1px solid #dfe7f1;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02);
+  color: var(--mb-text-primary);
+}
+
+.employer-portal-page .form-control:focus,
+.employer-portal-page .form-select:focus,
+.employer-portal-page textarea:focus,
+.employer-portal-page select:focus,
+.applicant-portal-page .form-control:focus,
+.applicant-portal-page .form-select:focus,
+.applicant-portal-page textarea:focus,
+.applicant-portal-page select:focus,
+.admin-portal-page .form-control:focus,
+.admin-portal-page .form-select:focus,
+.admin-portal-page textarea:focus,
+.admin-portal-page select:focus {
+  border-color: var(--mb-primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  background: #ffffff;
+}
+
+.employer-portal-page .btn-primary-custom,
+.applicant-portal-page .btn-primary-custom,
+.admin-portal-page .btn-primary-custom {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 45%, #3b82f6 100%);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+}
+
+.employer-portal-page .btn-primary-custom:hover,
+.applicant-portal-page .btn-primary-custom:hover,
+.admin-portal-page .btn-primary-custom:hover {
+  filter: brightness(1.04);
+  box-shadow: 0 14px 24px rgba(37, 99, 235, 0.22);
+}
+
+.employer-portal-page .btn-outline-secondary,
+.employer-portal-page .btn-outline-custom,
+.applicant-portal-page .btn-outline-secondary,
+.applicant-portal-page .btn-outline-custom,
+.admin-portal-page .btn-outline-secondary,
+.admin-portal-page .btn-outline-custom {
+  border-color: #cbd5e1;
+  color: #475569;
+  background: rgba(255,255,255,0.92);
+}
+
+.employer-portal-page .btn-outline-secondary:hover,
+.employer-portal-page .btn-outline-custom:hover,
+.applicant-portal-page .btn-outline-secondary:hover,
+.applicant-portal-page .btn-outline-custom:hover,
+.admin-portal-page .btn-outline-secondary:hover,
+.admin-portal-page .btn-outline-custom:hover {
+  border-color: #94a3b8;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.employer-portal-page .table,
+.applicant-portal-page .table,
+.admin-portal-page .table {
+  --bs-table-border-color: #e8edf3;
+  background: transparent;
+}
+
+.employer-portal-page .table th,
+.applicant-portal-page .table th,
+.admin-portal-page .table th {
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.employer-portal-page .table td,
+.applicant-portal-page .table td,
+.admin-portal-page .table td {
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.employer-portal-page .table td,
+.applicant-portal-page .table td,
+.admin-portal-page .table td {
+  color: #0f172a;
+  vertical-align: middle;
+}
+
+.employer-portal-page .badge,
+.applicant-portal-page .badge,
+.admin-portal-page .badge {
+  letter-spacing: 0.01em;
+}
+
+.employer-portal-page .breadcrumb,
+.applicant-portal-page .breadcrumb,
+.admin-portal-page .breadcrumb {
+  --bs-breadcrumb-divider-color: rgba(255,255,255,0.7);
+}
+
+.employer-portal-page .text-muted,
+.employer-portal-page .small.text-muted,
+.employer-portal-page .text-secondary,
+.applicant-portal-page .text-muted,
+.applicant-portal-page .small.text-muted,
+.applicant-portal-page .text-secondary,
+.admin-portal-page .text-muted,
+.admin-portal-page .small.text-muted,
+.admin-portal-page .text-secondary {
+  color: #64748b !important;
 }
 
 /* Pipeline Distribution Progress Bar */

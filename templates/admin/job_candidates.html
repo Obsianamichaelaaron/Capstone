@@ -407,10 +407,13 @@
 
                 {% with latest_export=recent_exports|first %}
                     {% if google_drive_folder_url %}
-                        <a href="{{ google_drive_folder_url }}" target="_blank" rel="noopener" class="btn btn-outline-light fw-bold btn-sm px-3 py-2 shadow-sm d-inline-flex align-items-center gap-1.5">
-                            <i class="fa-brands fa-google-drive"></i>
-                            <span>Open Google Drive</span>
-                        </a>
+                        <form method="POST" action="{% url 'admin_send_candidates_to_employer' job.id %}" class="d-inline" onsubmit="return confirm('Send the candidate report and notification to {{ job.company_name }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-light fw-bold btn-sm px-3 py-2 shadow-sm d-inline-flex align-items-center gap-1.5">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Send to Employer</span>
+                            </button>
+                        </form>
                     {% endif %}
                     {% if latest_export and latest_export.google_drive_view_link %}
                         <a href="{{ latest_export.google_drive_view_link }}" target="_blank" class="btn btn-success fw-bold btn-sm px-3 py-2 shadow-sm d-inline-flex align-items-center gap-1.5">
@@ -729,7 +732,8 @@ function exportSelectedExcel() {
 function dispatchSingleNotice(appId, candidateName) {
     if (confirm('Dispatch qualification status notice to ' + candidateName + '?')) {
         const form = document.getElementById('singleNoticeForm');
-        form.action = '/admin-portal/applications/' + appId + '/notify/';
+        const notificationUrl = "{% url 'admin_notify_single_applicant' 0 %}";
+        form.action = notificationUrl.replace('/0/', '/' + appId + '/');
         form.submit();
     }
 }

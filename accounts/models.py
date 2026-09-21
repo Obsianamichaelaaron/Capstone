@@ -3,6 +3,13 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 class CustomUserManager(BaseUserManager):
     """Custom user manager where email is the unique identifier for auth."""
+    def normalize_email(self, email):
+        email = (email or '').strip()
+        return super().normalize_email(email).lower()
+
+    def get_by_natural_key(self, email):
+        return self.get(**{f'{self.model.EMAIL_FIELD}__iexact': email})
+
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
@@ -73,6 +80,16 @@ class User(AbstractUser):
     def full_name(self):
         name = f"{self.first_name} {self.last_name}".strip()
         return name if name else self.email.split('@')[0]
+
+    def clean(self):
+        super().clean()
+        if self.email:
+            self.email = self.email.strip().lower()
+
+    def save(self, *args, **kwargs):
+        if self.email:
+            self.email = self.email.strip().lower()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.full_name} ({self.email}) - {self.get_role_display()}"

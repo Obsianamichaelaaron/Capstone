@@ -5,6 +5,7 @@ from django.core import mail
 from accounts.models import User, EmployerProfile, ApplicantProfile
 from jobs.models import JobPosting
 from applications.models import Application
+from messaging.models import Message
 from messaging.notifications import (
     send_application_not_qualified_email,
     send_application_under_review_email,
@@ -133,3 +134,25 @@ class EmailDispatchNotificationTests(TestCase):
         self.assertIsNotNone(app.notification_sent_at)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ['unqualified@test.com'])
+
+    def test_chat_message_sends_email_to_recipient(self):
+        """Sending an in-app message also notifies the recipient by email."""
+        mail.outbox.clear()
+        self.client.force_login(self.employer_user)
+
+        response = self.client.post(reverse('send_message_ajax'), {
+            'recipient_id': self.qualified_user.id,
+            'message': 'We would like to discuss your application.'
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.assertTrue(Message.objects.filter(
+            sender=self.employer_user,
+            receiver=self.qualified_user,
+            message='We would like to discuss your application.'
+        ).exists())
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['qualified@test.com'])
+        self.assertIn('New message from', mail.outbox[0].subject)
+        self.assertIn('We would like to discuss your application.', mail.outbox[0].body)

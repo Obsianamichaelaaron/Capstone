@@ -1,10 +1,11 @@
 import os
 import re
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
+from django.http import JsonResponse, HttpResponse, HttpResponseForbidden, FileResponse
 from django.core.files.base import ContentFile
 from django.views.decorators.http import require_POST
 from django.db.models import Q
@@ -858,7 +859,63 @@ def employer_candidates(request):
     })
 
 
-@employer_required
+@login_required
+def view_candidate_resume(request, pk):
+    """Show the original applicant resume in the browser."""
+    application = get_object_or_404(
+        Application.objects.select_related('applicant__user', 'job__employer__user'),
+        pk=pk
+    )
+    user = request.user
+    is_authorized_employer = user.is_employer and application.job.employer.user_id == user.id
+    if not (user.is_admin_user or is_authorized_employer):
+        return HttpResponseForbidden('You do not have permission to view this resume.')
+
+    resume = application.applicant.resume_file
+    if not resume:
+        return HttpResponse('This candidate has not uploaded a resume.', status=404)
+
+    extension = os.path.splitext(resume.name)[1].lower()
+    if extension == '.pdf':
+        response = FileResponse(resume.open('rb'), content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{os.path.basename(resume.name)}"'
+        return response
+
+    return render(request, 'employer/resume_view.html', {
+        'applicant': application.applicant,
+        'resume_name': os.path.basename(resume.name),
+        'is_docx': extension == '.docx',
+        'resume_file_url': reverse('view_candidate_resume_file', kwargs={'pk': pk}),
+    })
+
+
+@login_required
+def view_candidate_resume_file(request, pk):
+    """Serve the original resume bytes to the in-browser preview renderer."""
+    application = get_object_or_404(
+        Application.objects.select_related('applicant__user', 'job__employer__user'),
+        pk=pk
+    )
+    user = request.user
+    is_authorized_employer = user.is_employer and application.job.employer.user_id == user.id
+    if not (user.is_admin_user or is_authorized_employer):
+        return HttpResponseForbidden('You do not have permission to view this resume.')
+
+    resume = application.applicant.resume_file
+    if not resume:
+        return HttpResponse('This candidate has not uploaded a resume.', status=404)
+
+    extension = os.path.splitext(resume.name)[1].lower()
+    content_types = {
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.doc': 'application/msword',
+        '.pdf': 'application/pdf',
+    }
+    response = FileResponse(resume.open('rb'), content_type=content_types.get(extension, 'application/octet-stream'))
+    response['Content-Disposition'] = f'inline; filename="{os.path.basename(resume.name)}"'
+    return response
+
+
 def employer_candidate_detail(request, pk):
     """Detailed candidate profile review, skill comparison, remarks history, and interview scheduler."""
     is_admin_view = request.user.is_authenticated and request.user.is_admin_user

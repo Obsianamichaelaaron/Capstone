@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}My Applications & Career Pipeline - Multibiz{% endblock %}
+{% block title %}My Applications - Multibiz{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -18,7 +18,7 @@
                 </nav>
                 <div class="d-flex align-items-center gap-2 mt-1">
                     <h3 class="fw-extrabold text-white mb-0">
-                        <i class="fa-solid fa-list-check text-info me-2"></i>My Applications & Live Pipeline
+                        <i class="fa-solid fa-list-check text-info me-2"></i>My Applications
                     </h3>
                     <span class="badge bg-primary bg-opacity-25 text-white border border-primary border-opacity-50 rounded-pill px-2.5 py-1 small fw-semibold">
                         <i class="fa-solid fa-chart-line text-warning me-1"></i> {{ applications|length }} Active Submissions
@@ -39,7 +39,7 @@
             <table class="table align-middle table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>Job Title & Organization</th>
+                        <th>Job Title and Organization</th>
                         <th>Match Score</th>
                         <th>Applied Date</th>
                         <th>Qualification / Stage</th>
@@ -280,7 +280,7 @@
 
                     <div class="pt-2 border-top">
                         <a href="{% url 'job_detail_public' rec.job.id %}" class="btn btn-sm btn-outline-primary w-100 fw-semibold">
-                            <i class="fa-solid fa-paper-plane me-1"></i> View & Apply
+                            <i class="fa-solid fa-paper-plane me-1"></i> View and Apply
                         </a>
                     </div>
                 </div>

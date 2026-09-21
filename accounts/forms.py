@@ -1,6 +1,34 @@
 from django import forms
 from django.contrib.auth import authenticate
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from .models import User, ApplicantProfile, EmployerProfile
+
+
+DISPOSABLE_EMAIL_DOMAINS = {
+    '10minutemail.com', 'mailinator.com', 'tempmail.com', 'guerrillamail.com',
+    'yopmail.com', 'trashmail.com', 'sharklasers.com', 'tmailor.com',
+    'fakeinbox.com', 'maildrop.cc', 'getnada.com', 'tmpmail.org',
+    'emailondeck.com', 'mailnesia.com', 'mintemail.com', 'throwawaymail.com',
+    'dispostable.com', 'spam4.me', 'temp-mail.org', 'mailtemp.org', 'moakt.com'
+}
+
+
+def clean_email_value(value):
+    email = (value or '').strip().lower()
+    if not email:
+        raise forms.ValidationError('Email is required.')
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        raise forms.ValidationError('Enter a valid email address.')
+
+    domain = email.split('@')[-1] if '@' in email else ''
+    if domain in DISPOSABLE_EMAIL_DOMAINS:
+        raise forms.ValidationError('Disposable or temporary email addresses are not allowed.')
+
+    return email
 
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={
@@ -13,6 +41,10 @@ class LoginForm(forms.Form):
         'placeholder': 'Enter your password',
         'required': True
     }))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        return (email or '').strip().lower()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -30,6 +62,13 @@ class LoginForm(forms.Form):
 
 
 class ApplicantRegistrationForm(forms.ModelForm):
+    resume_file = forms.FileField(
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'accept': '.pdf,.docx,.doc'
+        })
+    )
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control',
         'placeholder': 'Create password',
@@ -51,6 +90,12 @@ class ApplicantRegistrationForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number (optional)'}),
         }
 
+    def clean_email(self):
+        normalized = clean_email_value(self.cleaned_data.get('email'))
+        if User.objects.filter(email__iexact=normalized).exists():
+            raise forms.ValidationError('An account with this email already exists.')
+        return normalized
+
     def clean(self):
         cleaned_data = super().clean()
         pwd = cleaned_data.get('password')
@@ -64,10 +109,14 @@ class ApplicantRegistrationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.role = 'applicant'
         user.status = 'active'
+        user.email = (self.cleaned_data.get('email') or '').strip().lower()
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
-            ApplicantProfile.objects.get_or_create(user=user)
+            profile, _ = ApplicantProfile.objects.get_or_create(user=user)
+            if self.cleaned_data.get('resume_file'):
+                profile.resume_file = self.cleaned_data['resume_file']
+                profile.save(update_fields=['resume_file'])
         return user
 
 
@@ -98,6 +147,12 @@ class EmployerRegistrationForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
         }
 
+    def clean_email(self):
+        normalized = clean_email_value(self.cleaned_data.get('email'))
+        if User.objects.filter(email__iexact=normalized).exists():
+            raise forms.ValidationError('An account with this email already exists.')
+        return normalized
+
     def clean(self):
         cleaned_data = super().clean()
         pwd = cleaned_data.get('password')
@@ -111,6 +166,7 @@ class EmployerRegistrationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.role = 'employer'
         user.status = 'active'
+        user.email = (self.cleaned_data.get('email') or '').strip().lower()
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()

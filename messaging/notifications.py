@@ -8,7 +8,7 @@ import json
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
+from django.utils.html import escape, strip_tags
 
 from .models import Notification
 from audit.utils import log_audit
@@ -24,6 +24,51 @@ def get_site_url(request=None):
         except Exception:
             pass
     return getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000/')
+
+
+def send_new_message_email(request, message):
+    """Notify the recipient by email when a new direct message is sent."""
+    recipient = message.receiver
+    sender = message.sender
+    if not recipient.email:
+        return False
+
+    site_url = get_site_url(request).rstrip('/')
+    chat_url = f'{site_url}/messaging/chat/{sender.id}/'
+    sender_name = sender.full_name or sender.email
+    subject = f'New message from {sender_name} on Multibiz'
+    text_content = (
+        f'Hi {recipient.first_name or recipient.email},\n\n'
+        f'{sender_name} sent you a message on Multibiz:\n\n'
+        f'{message.message}\n\n'
+        f'Open your conversation: {chat_url}'
+    )
+    html_content = (
+        f'<p>Hi {escape(recipient.first_name or recipient.email)},</p>'
+        f'<p><strong>{escape(sender_name)}</strong> sent you a message on Multibiz:</p>'
+        f'<blockquote>{escape(message.message)}</blockquote>'
+        f'<p><a href="{escape(chat_url)}">Open your conversation</a></p>'
+    )
+    from_email = getattr(
+        settings,
+        'DEFAULT_FROM_EMAIL',
+        getattr(settings, 'EMAIL_HOST_USER', 'no-reply@multibiz.com')
+    )
+
+    try:
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            from_email=from_email,
+            to=[recipient.email]
+        )
+        email.attach_alternative(html_content, 'text/html')
+        email.send(fail_silently=False)
+        logger.info('[Email] New message notification sent to %s', recipient.email)
+        return True
+    except Exception as error:
+        logger.error('[Email] Failed to send new message notification to %s: %s', recipient.email, error)
+        return False
 
 
 def send_welcome_email(request, user):

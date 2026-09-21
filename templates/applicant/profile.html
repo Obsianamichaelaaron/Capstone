@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Edit Profile & Resume Studio - Multibiz{% endblock %}
+{% block title %}Edit Profile - Multibiz{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -53,6 +53,35 @@
         50% { transform: translateY(120px); }
         100% { transform: translateY(0); }
     }
+
+    .resume-preview-frame {
+        width: 100%;
+        height: 680px;
+        border: 1px solid #94a3b8;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+
+    .resume-preview-file {
+        min-height: 260px;
+        border: 1px dashed #94a3b8;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+
+    #resumeSectionCard #dropzoneBox,
+    #resumeSectionCard #aiRejectionAlert,
+    #resumeSectionCard #aiAuditContainer,
+    #resumeSectionCard #aiExtractionAlert,
+    #resumeSectionCard #btnAutoParse {
+        display: none !important;
+    }
+
+    @media (max-width: 767.98px) {
+        .resume-preview-frame {
+            height: 520px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -65,12 +94,12 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1 small text-white-50">
                         <li class="breadcrumb-item"><a href="{% url 'applicant_dashboard' %}" class="text-white-50 text-decoration-none">Profile Dashboard</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">Profile & Resume Studio</li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Profile</li>
                     </ol>
                 </nav>
                 <div class="d-flex align-items-center gap-2 mt-1">
                     <h3 class="fw-extrabold text-white mb-0">
-                        <i class="fa-solid fa-user-pen text-info me-2"></i>Candidate Profile & Smart Resume Studio
+                        <i class="fa-solid fa-user-pen text-info me-2"></i>Candidate Profile
                     </h3>
                     <span class="badge bg-primary bg-opacity-25 text-white border border-primary border-opacity-50 rounded-pill px-2.5 py-1 small fw-semibold">
                         <i class="fa-solid fa-wand-magic-sparkles text-warning me-1"></i> AI Resume Parser
@@ -222,7 +251,7 @@
                     <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
                         <div class="section-title-badge">1</div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-0">Personal & Contact Dossier</h5>
+                            <h5 class="fw-bold text-dark mb-0">Personal Contact Dossier</h5>
                         </div>
                     </div>
 
@@ -278,13 +307,38 @@
                         <div class="d-flex align-items-center gap-3">
                             <div class="section-title-badge">2</div>
                             <div>
-                                <h5 class="fw-bold text-dark mb-0">AI Resume Studio & Document Parser</h5>
+                                <h5 class="fw-bold text-dark mb-0">Resume Preview</h5>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-sm btn-primary-custom px-3 py-2 shadow-sm" id="btnAutoParse">
-                            <i class="fa-solid fa-wand-magic-sparkles me-1 text-warning"></i> Auto-Extract with AI
-                        </button>
+                        {% if profile.resume_file %}
+                            <a href="{{ profile.resume_file.url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary px-3 py-2">
+                                <i class="fa-solid fa-up-right-from-square me-1"></i> Open Full Size
+                            </a>
+                        {% endif %}
                     </div>
+
+                    {% if profile.resume_file %}
+                        {% with resume_name=profile.resume_file.name|lower %}
+                            {% if '.pdf' in resume_name %}
+                                <iframe src="{{ profile.resume_file.url }}#toolbar=1&navpanes=0" class="resume-preview-frame" title="Resume preview"></iframe>
+                            {% else %}
+                                <div class="resume-preview-file d-flex flex-column justify-content-center align-items-center text-center p-4">
+                                    <i class="fa-solid fa-file-word text-primary fs-1 mb-3"></i>
+                                    <h6 class="fw-bold text-dark mb-1">{{ profile.resume_file.name|slice:'16:' }}</h6>
+                                    <p class="text-muted small mb-3">This document format cannot be previewed inside the browser.</p>
+                                    <a href="{{ profile.resume_file.url }}" target="_blank" rel="noopener" class="btn btn-primary-custom btn-sm px-3">
+                                        <i class="fa-solid fa-download me-1"></i> Open / Download Resume
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <div class="resume-preview-file d-flex flex-column justify-content-center align-items-center text-center p-4">
+                            <i class="fa-regular fa-file-lines text-muted fs-1 mb-3"></i>
+                            <h6 class="fw-bold text-dark mb-1">No resume uploaded yet</h6>
+                            <p class="text-muted small mb-0">Use the Replace button in the profile resume card to upload one.</p>
+                        </div>
+                    {% endif %}
 
                     <!-- Drag and drop zone -->
                     <div class="resume-dropzone-box mb-3" id="dropzoneBox">
@@ -380,7 +434,7 @@
                     <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
                         <div class="section-title-badge">3</div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-0">Experience & Educational Background</h5>
+                            <h5 class="fw-bold text-dark mb-0">Experience and Education</h5>
                         </div>
                     </div>
 
@@ -416,7 +470,7 @@
                     <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
                         <div class="section-title-badge">4</div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-0">Technical & Professional Competency Matrix</h5>
+                            <h5 class="fw-bold text-dark mb-0">Technical Competency Matrix</h5>
                         </div>
                     </div>
 

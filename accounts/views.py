@@ -70,40 +70,53 @@ def register_view(request):
     if request.user.is_authenticated:
         return redirect(get_user_destination(request.user))
 
-    tab = request.GET.get('tab', 'applicant')
+    tab = request.GET.get('tab')
     applicant_form = ApplicantRegistrationForm()
     employer_form = EmployerRegistrationForm()
 
     if request.method == 'POST':
         form_type = request.POST.get('form_type', 'applicant')
         if form_type == 'applicant':
-            applicant_form = ApplicantRegistrationForm(request.POST)
+            applicant_form = ApplicantRegistrationForm(request.POST, request.FILES)
             tab = 'applicant'
             if applicant_form.is_valid():
-                user = applicant_form.save()
-                login(request, user)
-                
-                # Log audit trail event
-                log_audit(
-                    request,
-                    'register_applicant',
-                    f"New candidate registered: {user.full_name} ({user.email})",
-                    target_type='applicant',
-                    target_id=user.id,
-                    target_name=user.full_name,
-                    user=user
-                )
+                resume_file = applicant_form.cleaned_data.get('resume_file')
+                if resume_file:
+                    extracted = parse_resume_document(file_obj=resume_file)
+                    validation = extracted.get('validation', {})
+                    if not validation.get('is_valid_resume', False):
+                        applicant_form.add_error(
+                            'resume_file',
+                            validation.get(
+                                'rejection_reason',
+                                'The uploaded file does not appear to be a valid Resume or CV.'
+                            )
+                        )
+                if not applicant_form.errors:
+                    user = applicant_form.save()
+                    login(request, user)
+                    
+                    # Log audit trail event
+                    log_audit(
+                        request,
+                        'register_applicant',
+                        f"New candidate registered: {user.full_name} ({user.email})",
+                        target_type='applicant',
+                        target_id=user.id,
+                        target_name=user.full_name,
+                        user=user
+                    )
 
-                # Dispatch Welcome Email and SMS Notification
-                from messaging.notifications import send_all_welcome_notifications
-                send_all_welcome_notifications(request, user)
+                    # Dispatch Welcome Email and SMS Notification
+                    from messaging.notifications import send_all_welcome_notifications
+                    send_all_welcome_notifications(request, user)
 
-                messages.success(
-                    request, 
-                    f"Welcome to Multibiz, {user.first_name}! Your candidate account has been created. "
-                    f"A welcome email and SMS notification have been dispatched to your contact details."
-                )
-                return redirect('applicant_profile')
+                    messages.success(
+                        request, 
+                        f"Welcome to Multibiz, {user.first_name}! Your candidate account has been created. "
+                        f"A welcome email and SMS notification have been dispatched to your contact details."
+                    )
+                    return redirect('applicant_profile')
         elif form_type == 'employer':
             employer_form = EmployerRegistrationForm(request.POST)
             tab = 'employer'

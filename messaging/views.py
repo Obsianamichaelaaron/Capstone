@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from accounts.models import User
 from .models import Message, Notification
+from .notifications import send_new_message_email
 
 @login_required
 def chat_center(request, recipient_id=None):
@@ -67,6 +68,7 @@ def send_message_ajax(request):
         receiver=recipient,
         message=text
     )
+    send_new_message_email(request, msg)
 
     return JsonResponse({
         'success': True,

@@ -16,6 +16,8 @@ urlpatterns = [
     # Employer routes
     path('employer/candidates/', views.employer_candidates, name='employer_candidates'),
     path('employer/candidates/<int:pk>/', views.employer_candidate_detail, name='employer_candidate_detail'),
+    path('employer/candidates/<int:pk>/resume/', views.view_candidate_resume, name='view_candidate_resume'),
+    path('employer/candidates/<int:pk>/resume/file/', views.view_candidate_resume_file, name='view_candidate_resume_file'),
     path('employer/candidates/<int:pk>/status/', views.update_application_status, name='update_application_status'),
     path('employer/candidates/<int:pk>/decide/', views.employer_decide_candidate, name='employer_decide_candidate'),
     path('employer/candidates/<int:pk>/schedule-interview/', views.schedule_interview, name='schedule_interview'),

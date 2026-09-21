@@ -10,7 +10,7 @@
        ========================================================================== */
     .auth-page-section {
         min-height: calc(100vh - 72px);
-        background: #f8fafc;
+        background: var(--surface-bg);
         display: flex;
         align-items: center;
         padding: 2.5rem 1rem;
@@ -283,12 +283,9 @@
                                     <i class="fa-solid fa-lock text-muted"></i> Password
                                 </label>
                             </div>
-                            <div class="input-group-modern has-toggle {% if form.password.errors %}is-invalid{% endif %}">
+                            <div class="input-group-modern {% if form.password.errors %}is-invalid{% endif %}">
                                 <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                                 {{ form.password }}
-                                <button class="btn btn-toggle-pwd" type="button" tabindex="-1" onclick="togglePasswordVisibility(this)">
-                                    <i class="fa-regular fa-eye"></i>
-                                </button>
                             </div>
                             {% if form.password.errors %}
                                 <div class="text-danger small mt-1 fw-semibold" style="font-size: 0.75rem;">{{ form.password.errors.0 }}</div>
@@ -329,25 +326,4 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    /**
-     * Password Visibility Toggle
-     */
-    function togglePasswordVisibility(button) {
-        const inputGroup = button.closest('.input-group-modern');
-        const input = inputGroup.querySelector('input');
-        const icon = button.querySelector('i');
-
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-
-</script>
 {% endblock %}

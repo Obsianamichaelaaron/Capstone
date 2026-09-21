@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}AI Talent Radar & Candidate Fitment - Multibiz{% endblock %}
+{% block title %}AI Talent Radar Candidate Fitment - Multibiz{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -286,7 +286,7 @@
                 </nav>
                 <div class="d-flex flex-wrap align-items-center gap-2 mt-1">
                     <h3 class="fw-extrabold text-white mb-0">
-                        <i class="fa-solid fa-wand-magic-sparkles text-warning me-2"></i>AI Talent Radar &amp; Fitment Matrix
+                        <i class="fa-solid fa-wand-magic-sparkles text-warning me-2"></i>AI Talent Radar Fitment Matrix
                     </h3>
                     <span class="badge bg-primary bg-opacity-25 text-white border border-primary border-opacity-50 rounded-pill px-2.5 py-1 small fw-semibold">
                         <span class="radar-live-pulse me-1"></span> Live Fitment Engine
@@ -304,7 +304,7 @@
         </div>
     </div>
 
-    <!-- Active Job Selector & Fitment Metrics Bar -->
+    <!-- Active Job Selector and Fitment Metrics Bar -->
     <div class="radar-control-card">
         <form method="GET" action="{% url 'recommended_candidates' %}" id="talentRadarForm">
             <div class="row g-3 align-items-center">
@@ -315,7 +315,7 @@
                     <select name="job_id" class="form-select bg-light border shadow-xs fw-semibold py-2" onchange="this.form.submit()">
                         {% for j in active_jobs %}
                             <option value="{{ j.id }}" {% if selected_job.id == j.id %}selected{% endif %}>
-                                {{ j.title }} &bull; {{ j.location }} ({{ j.get_employment_type_display }})
+                                {{ j.title }} - {{ j.location }} ({{ j.get_employment_type_display }})
                             </option>
                         {% empty %}
                             <option>No active job postings available.</option>
@@ -429,8 +429,8 @@
                                     </div>
                                     <div class="fitment-bar-track">
                                         <div class="fitment-bar-fill {% if rec.match_score >= 80 %}bg-success{% elif rec.match_score >= 60 %}bg-primary{% else %}bg-warning{% endif %}" 
-                                             role="progressbar" 
-                                             style="width: {{ rec.match_score }}%;" 
+                                            role="progressbar"
+                                            data-score="{{ rec.match_score }}"
                                              aria-valuenow="{{ rec.match_score }}" 
                                              aria-valuemin="0" 
                                              aria-valuemax="100">
@@ -484,7 +484,9 @@
                             <div class="border-top pt-3 mt-2 d-flex justify-content-between align-items-center">
                                 <div class="text-muted small" style="font-size: 0.75rem;">
                                     {% if rec.applicant.resume_file %}
-                                        <span class="text-success"><i class="fa-solid fa-file-pdf me-1"></i>Resume File</span>
+                                        <a href="{% url 'view_candidate_resume' rec.application.id %}" target="_blank" rel="noopener" class="text-success text-decoration-none fw-semibold" title="View candidate resume">
+                                            <i class="fa-solid fa-file-lines me-1"></i>View Resume
+                                        </a>
                                     {% else %}
                                         <span><i class="fa-solid fa-circle-check text-primary me-1"></i>Verified</span>
                                     {% endif %}
@@ -546,6 +548,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('candidateSearchInput');
     const cards = document.querySelectorAll('.candidate-card-item');
+
+    document.querySelectorAll('.fitment-bar-fill[data-score]').forEach(function(bar) {
+        const score = Number.parseFloat(bar.dataset.score);
+        if (!Number.isNaN(score)) {
+            bar.style.width = `${Math.max(0, Math.min(100, score))}%`;
+        }
+    });
 
     if (searchInput) {
         searchInput.addEventListener('input', function() {
